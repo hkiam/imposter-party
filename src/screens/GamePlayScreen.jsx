@@ -22,13 +22,42 @@ export default function GamePlayScreen({ players, roundTimeMinutes, onEndGame })
   }, [paused, timeLeft]);
 
   useEffect(() => {
-    if (timeLeft === 0) {
-      const audio = new Audio("/timer-end.mp3");
-      audio.play();
+    if (timeLeft === 0) { 
       setShowEndPrompt(true);
       setTimeExpired(true);
     }
   }, [timeLeft]);
+
+  // Wake Lock API für mobile Geräte aktivieren
+  useEffect(() => {
+    let wakeLock = null;
+
+    const requestWakeLock = async () => {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request("screen");
+          console.log("✅ Wake Lock aktiviert");
+        }
+      } catch (err) {
+        console.warn("⚠️ Wake Lock Fehler:", err);
+      }
+    };
+
+    requestWakeLock();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        requestWakeLock();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (wakeLock) wakeLock.release();
+    };
+  }, []);
 
   const formatTime = (s) => {
     const m = Math.floor(s / 60);

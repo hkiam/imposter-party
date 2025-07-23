@@ -578,6 +578,7 @@ export default function App() {
                     hint={gameState.hint}
                     showHints={settings.showHints}
                     onNext={handleRevealDone}
+                    onAbort={restartGame}
                 />
             )}
             {phase === "play" && gameState && (

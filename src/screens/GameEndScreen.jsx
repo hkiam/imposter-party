@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 
-export default function GameEndScreen({ evaluationDone, evaluateGame, resultText, onRestart, imposters, players, highscore }) {
+export default function GameEndScreen({ evaluationDone, evaluateGame, resultText, onRestart, imposters, players, highscore, word }) {
   const [step, setStep] = useState(0);
   const [allImpostersFound, setAllImpostersFound] = useState(null);
   const [wordGuessedByImposters, setWordGuessedByImposters] = useState(null);
@@ -30,7 +30,7 @@ export default function GameEndScreen({ evaluationDone, evaluateGame, resultText
   return (
     <div className="p-4 max-w-xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Spielende</h1>
-
+    
       {!evaluationDone ? (
         <Card className="mb-4">
           <CardContent>
@@ -59,6 +59,7 @@ export default function GameEndScreen({ evaluationDone, evaluateGame, resultText
             )}
           <div className="mt-4 bg-red-100 border border-red-300 text-red-800 p-2 rounded">
   🕵️‍♂️ <strong>Imposter:</strong> {imposters.join(", ")}
+  🕵️‍♂️ <strong>Wort:</strong> {word}
 </div>
                       <div className="mt-4">
               <h3 className="text-md font-semibold mb-2">🏅 Spielerstatistiken</h3>

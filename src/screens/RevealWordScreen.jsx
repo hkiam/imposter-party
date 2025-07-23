@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 
-export default function RevealWordScreen({ players, imposters, word, hint, showHints, onNext }) {
+export default function RevealWordScreen({ players, imposters, word, hint, showHints, onNext, onAbort }) {
   const [index, setIndex] = useState(0);
   const [showContent, setShowContent] = useState(false);
 
@@ -37,20 +37,26 @@ export default function RevealWordScreen({ players, imposters, word, hint, showH
               {current.icon}
             </button>
 
-            <p className="mt-2 text-xl font-semibold">
+            <p
+              className={`mt-2 text-xl font-semibold ${showContent && isImposter ? "text-red-600" : ""
+                }`}
+            >
               {showContent
                 ? isImposter
                   ? showHints
-                    ? `Hinweis: ${hint}`
+                    ? `Hinweis (Imposter!): ${hint}`
                     : "Du bist der Imposter!"
                   : `Wort: ${word}`
                 : "Halte das Bild gedrückt, um deinen Hinweis zu sehen"}
             </p>
           </div>
+          <div className="flex flex-col gap-4 justify-center mt-6">
+            <Button className="h-12 bg-blue-500 hover:bg-blue-600" onClick={handleNext}>
+              {index < players.length - 1 ? "Nächster Spieler" : "Spiel starten"}
+            </Button>
+            <Button className="h-12 bg-red-500 hover:bg-red-600" onClick={onAbort}>Spiel abbrechen</Button>
+          </div>
 
-          <Button onClick={handleNext}>
-            {index < players.length - 1 ? "Nächster Spieler" : "Spiel starten"}
-          </Button>
         </CardContent>
       </Card>
     </div>

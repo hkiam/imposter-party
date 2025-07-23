@@ -20,10 +20,10 @@ export default function GameSetupScreen({
     return saved
       ? JSON.parse(saved)
       : {
-          numImposters: 1,
-          showHints: true,
-          roundTimeMinutes: 2,
-        };
+        numImposters: 1,
+        showHints: true,
+        roundTimeMinutes: 2,
+      };
   });
 
   useEffect(() => {
@@ -45,14 +45,25 @@ export default function GameSetupScreen({
     setPlayers(players.filter((p) => p.name !== name));
   };
 
+  function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+
   const handleStart = () => {
     if (players.length < 3) {
       alert("Mindestens 3 Spieler erforderlich");
       return;
     }
 
-    const shuffled = [...players].sort(() => 0.5 - Math.random());
+    const shuffled = shuffleArray(players);
     const imposters = shuffled.slice(0, settings.numImposters).map((p) => p.name);
+
 
     const activeWords = categories.filter((c) => c.active).flatMap((c) => c.words);
     if (activeWords.length === 0) {
