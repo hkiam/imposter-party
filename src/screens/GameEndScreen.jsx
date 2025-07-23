@@ -17,7 +17,7 @@ export default function GameEndScreen({ evaluationDone, evaluateGame, resultText
     if (step === 0) {
       setAllImpostersFound(value);
       if (!value) {
-        evaluateGame(false, false); // Impostor nicht erkannt → direkt auswerten
+        evaluateGame(false, false); // Imposter nicht erkannt → direkt auswerten
       } else {
         setStep(1);
       }
@@ -37,7 +37,7 @@ export default function GameEndScreen({ evaluationDone, evaluateGame, resultText
             {step === 0 && (
               <>
                 <p className="mb-4 text-sm text-gray-700">
-                  Wurden alle Impostor erkannt?
+                  Wurden alle Imposter erkannt?
                 </p>
                 <div className="flex gap-4">
                   <Button onClick={() => handleAnswer(true)} className="w-full">Ja</Button>
@@ -49,7 +49,7 @@ export default function GameEndScreen({ evaluationDone, evaluateGame, resultText
             {step === 1 && (
               <>
                 <p className="mb-4 text-sm text-gray-700">
-                  Konnten die Impostor das geheime Wort erraten?
+                  Konnten die Imposter das geheime Wort erraten?
                 </p>
                 <div className="flex gap-4">
                   <Button onClick={() => handleAnswer(true)} className="w-full">Ja</Button>
@@ -58,7 +58,7 @@ export default function GameEndScreen({ evaluationDone, evaluateGame, resultText
               </>
             )}
           <div className="mt-4 bg-red-100 border border-red-300 text-red-800 p-2 rounded">
-  🕵️‍♂️ <strong>Impostor:</strong> {imposters.join(", ")}
+  🕵️‍♂️ <strong>Imposter:</strong> {imposters.join(", ")}
 </div>
                       <div className="mt-4">
               <h3 className="text-md font-semibold mb-2">🏅 Spielerstatistiken</h3>

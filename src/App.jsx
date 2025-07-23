@@ -15,7 +15,7 @@ export default function App() {
     return saved ? JSON.parse(saved) : {};
   });
   const [guesses, setGuesses] = useState({});
-  const [impostorAnswer, setImpostorAnswer] = useState("");
+  const [ImposterAnswer, setImposterAnswer] = useState("");
   const [evaluationDone, setEvaluationDone] = useState(false);
   const [resultText, setResultText] = useState("");
 
@@ -526,11 +526,11 @@ export default function App() {
     setHighscore(updated);
 
     if (!impostersFound) {
-        setResultText("Die Impostor haben gewonnen, weil sie nicht alle entdeckt wurden.");
+        setResultText("Die Imposter haben gewonnen, weil sie nicht alle entdeckt wurden.");
     } else if (wordGuessed) {
-        setResultText("Die Impostor haben gewonnen, weil sie das geheime Wort erraten konnten.");
+        setResultText("Die Imposter haben gewonnen, weil sie das geheime Wort erraten konnten.");
     } else {
-        setResultText("Die ehrlichen Spieler haben gewonnen, weil die Impostor das Wort nicht erraten konnten.");
+        setResultText("Die ehrlichen Spieler haben gewonnen, weil die Imposter das Wort nicht erraten konnten.");
     }
 
     setEvaluationDone(true);
@@ -542,7 +542,7 @@ export default function App() {
     setSettings({});
     setGameState(null);
     setGuesses({});
-    setImpostorAnswer("");
+    setImposterAnswer("");
     setEvaluationDone(false);
     setPhase("setup");
   };
@@ -596,8 +596,8 @@ export default function App() {
           word={gameState.word}
           guesses={guesses}
           setGuesses={setGuesses}
-          impostorAnswer={impostorAnswer}
-          setImpostorAnswer={setImpostorAnswer}
+          ImposterAnswer={ImposterAnswer}
+          setImposterAnswer={setImposterAnswer}
           evaluateGame={evaluateGame}
           evaluationDone={evaluationDone}
           resultText={resultText}

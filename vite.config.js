@@ -10,9 +10,9 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["favicon.svg", "favicon.ico", "robots.txt", "apple-touch-icon.png"],
       manifest: {
-        name: "Impostor Party",
-        short_name: "Impostor",
-        description: "Wer ist der geheime Impostor? Ein Spiel für Freunde.",
+        name: "Imposter Party",
+        short_name: "Imposter",
+        description: "Wer ist der geheime Imposter? Ein Spiel für Freunde.",
         theme_color: "#ffffff",
         background_color: "#f3f4f6",
         display: "standalone",

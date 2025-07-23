@@ -34,14 +34,14 @@ export default function GamePlayScreen({ players, roundTimeMinutes, onEndGame })
           {paused ? "Fortsetzen" : "Pause"}
         </Button>
         <Button variant="destructive" onClick={() => setShowEndPrompt(true)}>
-          Impostor wählen
+          Imposter wählen
         </Button>
       </div>
 
       {showEndPrompt && (
         <div className="bg-yellow-100 border border-yellow-300 p-4 rounded shadow text-left">
           <h2 className="text-lg font-semibold mb-2">⏳ Zeit abgelaufen</h2>
-          <p className="mb-4">Die Runde ist beendet. Bitte legt jetzt fest, wer der Impostor ist.</p>
+          <p className="mb-4">Die Runde ist beendet. Bitte legt jetzt fest, wer der Imposter ist.</p>
           <Button className="w-full" onClick={onEndGame}>Weiter zur Auswertung</Button>
         </div>
       )}

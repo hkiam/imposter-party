@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="https://hkiam.github.io/imposter-party/pwa-512x512.png" alt="Impostor Party Logo" width="512" />
+  <img src="https://hkiam.github.io/imposter-party/pwa-512x512.png" alt="Imposter Party Logo" width="512" />
 </p>
 
-# 🕵️‍♂️ Impostor Party – Das Partyspiel als PWA
+# 🕵️‍♂️ Imposter Party – Das Partyspiel als PWA
 
-**Impostor Party** ist ein unterhaltsames Gruppenspiel, das du direkt im Browser spielen kannst – auch **offline als installierbare PWA**.
+**Imposter Party** ist ein unterhaltsames Gruppenspiel, das du direkt im Browser spielen kannst – auch **offline als installierbare PWA**.
 
-Ziel des Spiels: Alle sehen ein geheimes Wort – außer dem Impostor. Der muss bluffen, erraten und enttarnt werden!
+Ziel des Spiels: Alle sehen ein geheimes Wort – außer dem Imposter. Der muss bluffen, erraten und enttarnt werden!
 
 ---
 
@@ -14,9 +14,9 @@ Ziel des Spiels: Alle sehen ein geheimes Wort – außer dem Impostor. Der muss 
 
 - ✅ Spielerverwaltung mit Bildern & Icons
 - ✅ Kategorien-Editor mit Stichwörtern und Hinweisen
-- ✅ Automatische Impostor-Zuweisung & Wortverteilung
+- ✅ Automatische Imposter-Zuweisung & Wortverteilung
 - ✅ Spielrunden mit Timer, Pausenfunktion und Notstop
-- ✅ Auswertung: Wer hat gewonnen? Wer war der Impostor?
+- ✅ Auswertung: Wer hat gewonnen? Wer war der Imposter?
 - ✅ Highscore-System (lokal gespeichert)
 - ✅ PWA: Installierbar & offline spielbar
 - ✅ Deployment via GitHub Pages
@@ -111,7 +111,7 @@ https://hkiam.github.io/imposter-party/
 1. **Spieler erstellen** → mit Namen & Bild
 2. **Kategorien auswählen**
 3. **Wort anzeigen lassen** → Spieler für Spieler
-4. **Impostor bekommt Hinweis statt Wort**
+4. **Imposter bekommt Hinweis statt Wort**
 5. **Diskussionsrunde mit Timer**
 6. **Ergebnisphase**: Wer war's? Konnten sie das Wort erraten?
 7. **Highscore aktualisiert sich automatisch**
