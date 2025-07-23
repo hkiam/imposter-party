@@ -19,13 +19,13 @@ export default function RevealWordScreen({ players, imposters, word, hint, showH
   };
 
   return (
-    <div className="p-4 max-w-xl mx-auto text-center">
+    <div className="p-4 max-w-xl mx-auto text-center select-none">
       <Card>
         <CardContent>
-          <h2 className="text-2xl font-bold mb-4">Spieler {index + 1} von {players.length}</h2>
+          <h2 className="text-lg font-medium mb-2">Spieler {index + 1} von {players.length}</h2>
 
           <div className="mb-4">
-            <p className="text-lg font-medium mb-2">{current.icon} <strong>{current.name}</strong></p>
+            <p className="text-2xl font-bold mb-4"><strong>{current.name}</strong></p>
 
             <button
               onMouseDown={() => setShowContent(true)}

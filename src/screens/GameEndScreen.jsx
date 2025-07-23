@@ -34,9 +34,15 @@ export default function GameEndScreen({ evaluationDone, evaluateGame, resultText
       {!evaluationDone ? (
         <Card className="mb-4">
           <CardContent>
+                     <div className="mt-4 bg-red-100 border border-red-300 text-red-800 p-2 rounded">
+                <strong>Imposter:</strong> {imposters.join(", ")}
+                <br/>
+                <strong>Wort:</strong> {word}
+          </div>
+          <br/> 
             {step === 0 && (
               <>
-                <p className="mb-4 text-sm text-gray-700">
+                <p className="mb-4 text-sm text-gray-700 font-bold">
                   Wurden alle Imposter erkannt?
                 </p>
                 <div className="flex gap-4">
@@ -48,7 +54,7 @@ export default function GameEndScreen({ evaluationDone, evaluateGame, resultText
 
             {step === 1 && (
               <>
-                <p className="mb-4 text-sm text-gray-700">
+                <p className="mb-4 text-sm text-gray-700 font-bold">
                   Konnten die Imposter das geheime Wort erraten?
                 </p>
                 <div className="flex gap-4">
@@ -57,10 +63,7 @@ export default function GameEndScreen({ evaluationDone, evaluateGame, resultText
                 </div>
               </>
             )}
-          <div className="mt-4 bg-red-100 border border-red-300 text-red-800 p-2 rounded">
-  🕵️‍♂️ <strong>Imposter:</strong> {imposters.join(", ")}
-  🕵️‍♂️ <strong>Wort:</strong> {word}
-</div>
+
                       <div className="mt-4">
               <h3 className="text-md font-semibold mb-2">🏅 Spielerstatistiken</h3>
               <ul className="text-sm space-y-1">

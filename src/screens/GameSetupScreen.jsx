@@ -145,6 +145,10 @@ export default function GameSetupScreen({
         </CardContent>
       </Card>
 
+      <Button onClick={handleStart} className="w-full mb-6 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold py-3 rounded-lg shadow-md transition duration-200">
+        Spiel starten
+      </Button>
+
       <Card className="mb-4">
         <CardContent>
           <div className="flex justify-between items-center mb-2">
@@ -172,10 +176,6 @@ export default function GameSetupScreen({
           </ul>
         </CardContent>
       </Card>
-
-      <Button onClick={handleStart} className="w-full mb-6">
-        Spiel starten
-      </Button>
 
       {highscore && Object.keys(highscore).length > 0 && (
         <Card>
