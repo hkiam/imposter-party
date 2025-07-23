@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://hkiam.github.io/imposter-party/pwa-512x512.png" alt="Impostor Party Logo" width="128" />
+</p>
+
 # 🕵️‍♂️ Impostor Party – Das Partyspiel als PWA
 
 **Impostor Party** ist ein unterhaltsames Gruppenspiel, das du direkt im Browser spielen kannst – auch **offline als installierbare PWA**.
