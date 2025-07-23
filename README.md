@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://hkiam.github.io/imposter-party/pwa-512x512.png" alt="Impostor Party Logo" width="128" />
+  <img src="https://hkiam.github.io/imposter-party/pwa-512x512.png" alt="Impostor Party Logo" width="512" />
 </p>
 
 # 🕵️‍♂️ Impostor Party – Das Partyspiel als PWA
