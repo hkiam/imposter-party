@@ -5,6 +5,7 @@ export default function GamePlayScreen({ players, roundTimeMinutes, onEndGame })
   const [timeLeft, setTimeLeft] = useState(roundTimeMinutes * 60);
   const [paused, setPaused] = useState(false);
   const [showEndPrompt, setShowEndPrompt] = useState(false);
+  const [timeExpired, setTimeExpired] = useState(false);
 
   useEffect(() => {
     if (paused || timeLeft <= 0) return;
@@ -15,6 +16,7 @@ export default function GamePlayScreen({ players, roundTimeMinutes, onEndGame })
   useEffect(() => {
     if (timeLeft === 0) {
       setShowEndPrompt(true);
+      setTimeExpired(true);
     }
   }, [timeLeft]);
 
@@ -22,6 +24,14 @@ export default function GamePlayScreen({ players, roundTimeMinutes, onEndGame })
     const m = Math.floor(s / 60);
     const sec = s % 60;
     return `${m}:${sec.toString().padStart(2, "0")}`;
+  };
+
+  const handleEndClick = () => {
+    if (timeLeft > 0) {
+      onEndGame();
+    } else {
+      setShowEndPrompt(true);
+    }
   };
 
   return (
@@ -33,15 +43,15 @@ export default function GamePlayScreen({ players, roundTimeMinutes, onEndGame })
         <Button onClick={() => setPaused((p) => !p)}>
           {paused ? "Fortsetzen" : "Pause"}
         </Button>
-        <Button variant="destructive" onClick={() => setShowEndPrompt(true)}>
-          Imposter wählen
+        <Button variant="destructive" onClick={handleEndClick}>
+          Impostor wählen
         </Button>
       </div>
 
-      {showEndPrompt && (
+      {showEndPrompt && timeExpired && (
         <div className="bg-yellow-100 border border-yellow-300 p-4 rounded shadow text-left">
           <h2 className="text-lg font-semibold mb-2">⏳ Zeit abgelaufen</h2>
-          <p className="mb-4">Die Runde ist beendet. Bitte legt jetzt fest, wer der Imposter ist.</p>
+          <p className="mb-4">Die Runde ist beendet. Bitte legt jetzt fest, wer der Impostor ist.</p>
           <Button className="w-full" onClick={onEndGame}>Weiter zur Auswertung</Button>
         </div>
       )}
