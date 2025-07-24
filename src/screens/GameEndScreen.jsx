@@ -44,31 +44,47 @@ export default function GameEndScreen({ evaluationDone, evaluateGame, resultText
                         <br />
                         {step === 0 && (
                             <>
-                                <p className="mb-4 text-sm text-gray-700 font-bold">
+                                <p className="mb-4 text-sm text-gray-700 font-bold text-center">
                                     Wurden alle Imposter erkannt?
                                 </p>
                                 <div className="flex gap-4">
-                                    <Button onClick={() => handleAnswer(true)} className="w-full">Ja</Button>
-                                    <Button onClick={() => handleAnswer(false)} className="w-full" variant="secondary">Nein</Button>
+                                    <Button
+                                        onClick={() => handleAnswer(true)}
+                                        className="w-full bg-green-600 hover:bg-green-700 text-white text-lg font-semibold py-2 rounded-lg shadow"
+                                    >
+                                        ✅ Ja
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleAnswer(false)}
+                                        className="w-full bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-2 rounded-lg shadow"
+                                    >
+                                        ❌ Nein
+                                    </Button>
                                 </div>
                             </>
                         )}
 
                         {step === 1 && (
                             <>
-                                <p className="mb-4 text-sm text-gray-700 font-bold">
+                                <p className="mb-4 text-sm text-gray-700 font-bold text-center">
                                     Konnten die Imposter das geheime Wort erraten?
                                 </p>
                                 <div className="flex gap-4">
-                                    <Button onClick={() => handleAnswer(true)} className="w-full">Ja</Button>
-                                    <Button onClick={() => handleAnswer(false)} className="w-full" variant="secondary">Nein</Button>
+                                    <Button
+                                        onClick={() => handleAnswer(true)}
+                                        className="w-full bg-green-600 hover:bg-green-700 text-white text-lg font-semibold py-2 rounded-lg shadow"
+                                    >
+                                        Ja
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleAnswer(false)}
+                                        className="w-full bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-2 rounded-lg shadow"
+                                    >
+                                        Nein
+                                    </Button>
                                 </div>
                             </>
                         )}
-                        <div className="mt-4">
-                            <h3 className="text-md font-semibold mb-2">🏅 Highscore</h3>
-                            <PlayerStats players={players} highscore={highscore} />
-                        </div>
                     </CardContent>
                 </Card>
             ) : (
@@ -78,6 +94,10 @@ export default function GameEndScreen({ evaluationDone, evaluateGame, resultText
                         <p className="text-md text-gray-800 bg-yellow-100 p-3 rounded">
                             {resultText || "Keine Auswertung verfügbar."}
                         </p>
+                        <div className="mt-4">
+                            <h3 className="text-md font-semibold mb-2">🏅 Highscore</h3>
+                            <PlayerStats players={players} highscore={highscore} />
+                        </div>
                     </CardContent>
                 </Card>
             )}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRegisterSW } from 'virtual:pwa-register/react'
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -30,6 +31,7 @@ export default function GameSetupScreen({
       };
   });
 
+  const { needRefresh, updateServiceWorker } = useRegisterSW()
 
   const [showCategories, setShowCategories] = useState(false);
   const [showHighscore, setShowHighscore] = useState(false);
@@ -116,6 +118,13 @@ export default function GameSetupScreen({
       <div className="flex items-center gap-2 mb-4">
         <img src="pwa-192x192.png" alt="Imposter Icon" className="w-8 h-8" />
         <h1 className="text-2xl font-bold">Imposter</h1>
+        <p>v{__APP_VERSION__}</p>
+
+        {needRefresh && (
+          <div className="fixed bottom-4 right-4 bg-yellow-100 p-4 rounded shadow">
+            <button onClick={() => updateServiceWorker(true)}>🔄 Neue Version verfügbar!</button>
+          </div>
+        )}
       </div>
 
 
