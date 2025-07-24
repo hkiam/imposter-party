@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import PlayerStats from "../components/ui/PlayerStats"; 
+import PlayerStats from "../components/ui/PlayerStats";
 
 export default function GameSetupScreen({
   onStartGame,
@@ -22,14 +22,18 @@ export default function GameSetupScreen({
     return saved
       ? JSON.parse(saved)
       : {
-          numImposters: 1,
-          showHints: true,
-          roundTimeMinutes: 2,
-        };
+        numImposters: 1,
+        showHints: true,
+        roundTimeMinutes: 2,
+      };
   });
 
   const [showCategories, setShowCategories] = useState(false);
   const [showHighscore, setShowHighscore] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+
+  const emojiOptions = ["😀", "😎", "👽", "🐱", "🐶", "🦊", "🐸", "🧙‍♂️", "🧛‍♀️", "🧟", "🤖"];
+
 
   useEffect(() => {
     localStorage.setItem("imposter_players", JSON.stringify(players));
@@ -129,47 +133,65 @@ export default function GameSetupScreen({
       {/* Einstellungen */}
       <Card className="mb-4">
         <CardContent>
-          <h2 className="text-xl font-semibold mb-2">🛠️ Einstellungen</h2>
-          <div className="space-y-2">
-            <div>
-              <label>Anzahl Imposter:</label>
-              <Input
-                type="number"
-                min={1}
-                max={players.length || 1}
-                value={settings.numImposters}
-                onChange={(e) =>
-                  setSettings({ ...settings, numImposters: parseInt(e.target.value) })
-                }
-              />
-            </div>
-            <div>
-              <label>Hinweis anzeigen:</label>
-              <input
-                type="checkbox"
-                checked={settings.showHints}
-                onChange={(e) =>
-                  setSettings({ ...settings, showHints: e.target.checked })
-                }
-              />
-            </div>
-            <div>
-              <label>Rundenzeit (Minuten):</label>
-              <Input
-                type="number"
-                min={1}
-                value={settings.roundTimeMinutes}
-                onChange={(e) =>
-                  setSettings({
-                    ...settings,
-                    roundTimeMinutes: parseInt(e.target.value),
-                  })
-                }
-              />
-            </div>
+          <div
+            className="flex justify-between items-center cursor-pointer"
+            onClick={() => setShowSettings(!showSettings)}
+          >
+            <h2 className="text-xl font-semibold">🛠️ Einstellungen</h2>
+            <span>{showSettings ? "▲" : "▼"}</span>
           </div>
+          <AnimatePresence initial={false}>
+            {showSettings && (
+              <motion.div
+                key="settings"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden mt-2 space-y-2"
+              >
+                <div>
+                  <label>Anzahl Imposter:</label>
+                  <Input
+                    type="number"
+                    min={1}
+                    max={players.length || 1}
+                    value={settings.numImposters}
+                    onChange={(e) =>
+                      setSettings({ ...settings, numImposters: parseInt(e.target.value) })
+                    }
+                  />
+                </div>
+                <div>
+                  <label>Hinweis anzeigen:</label>
+                  <input
+                    type="checkbox"
+                    checked={settings.showHints}
+                    onChange={(e) =>
+                      setSettings({ ...settings, showHints: e.target.checked })
+                    }
+                  />
+                </div>
+                <div>
+                  <label>Rundenzeit (Minuten):</label>
+                  <Input
+                    type="number"
+                    min={1}
+                    value={settings.roundTimeMinutes}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        roundTimeMinutes: parseInt(e.target.value),
+                      })
+                    }
+                  />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </CardContent>
       </Card>
+
 
 
       {/* Kategorien */}
