@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
+import PlayerStats from "../components/ui/PlayerStats"; 
 
 export default function GameSetupScreen({
   onStartGame,
@@ -20,11 +22,14 @@ export default function GameSetupScreen({
     return saved
       ? JSON.parse(saved)
       : {
-        numImposters: 1,
-        showHints: true,
-        roundTimeMinutes: 2,
-      };
+          numImposters: 1,
+          showHints: true,
+          roundTimeMinutes: 2,
+        };
   });
+
+  const [showCategories, setShowCategories] = useState(false);
+  const [showHighscore, setShowHighscore] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("imposter_players", JSON.stringify(players));
@@ -54,7 +59,6 @@ export default function GameSetupScreen({
     return arr;
   }
 
-
   const handleStart = () => {
     if (players.length < 3) {
       alert("Mindestens 3 Spieler erforderlich");
@@ -63,7 +67,6 @@ export default function GameSetupScreen({
 
     const shuffled = shuffleArray(players);
     const imposters = shuffled.slice(0, settings.numImposters).map((p) => p.name);
-
 
     const activeWords = categories.filter((c) => c.active).flatMap((c) => c.words);
     if (activeWords.length === 0) {
@@ -89,11 +92,16 @@ export default function GameSetupScreen({
     <div className="p-4 max-w-xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Spiel vorbereiten</h1>
 
+      {/* Spieler hinzufügen */}
       <Card className="mb-4">
         <CardContent>
-          <h2 className="text-xl font-semibold mb-2">Spieler hinzufügen</h2>
+          <h2 className="text-xl font-semibold mb-2">🧑‍🤝‍🧑 Spieler hinzufügen</h2>
           <div className="flex gap-2 mb-2">
-            <Input value={newPlayer} onChange={(e) => setNewPlayer(e.target.value)} placeholder="Spielername" />
+            <Input
+              value={newPlayer}
+              onChange={(e) => setNewPlayer(e.target.value)}
+              placeholder="Spielername"
+            />
             <Button onClick={addPlayer}>Hinzufügen</Button>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -110,9 +118,18 @@ export default function GameSetupScreen({
         </CardContent>
       </Card>
 
+      {/* Spiel starten */}
+      <Button
+        onClick={handleStart}
+        className="w-full mb-6 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold py-3 rounded-lg shadow-md transition duration-200"
+      >
+        Spiel starten
+      </Button>
+
+      {/* Einstellungen */}
       <Card className="mb-4">
         <CardContent>
-          <h2 className="text-xl font-semibold mb-2">Einstellungen</h2>
+          <h2 className="text-xl font-semibold mb-2">🛠️ Einstellungen</h2>
           <div className="space-y-2">
             <div>
               <label>Anzahl Imposter:</label>
@@ -121,7 +138,9 @@ export default function GameSetupScreen({
                 min={1}
                 max={players.length || 1}
                 value={settings.numImposters}
-                onChange={(e) => setSettings({ ...settings, numImposters: parseInt(e.target.value) })}
+                onChange={(e) =>
+                  setSettings({ ...settings, numImposters: parseInt(e.target.value) })
+                }
               />
             </div>
             <div>
@@ -129,7 +148,9 @@ export default function GameSetupScreen({
               <input
                 type="checkbox"
                 checked={settings.showHints}
-                onChange={(e) => setSettings({ ...settings, showHints: e.target.checked })}
+                onChange={(e) =>
+                  setSettings({ ...settings, showHints: e.target.checked })
+                }
               />
             </div>
             <div>
@@ -138,62 +159,98 @@ export default function GameSetupScreen({
                 type="number"
                 min={1}
                 value={settings.roundTimeMinutes}
-                onChange={(e) => setSettings({ ...settings, roundTimeMinutes: parseInt(e.target.value) })}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    roundTimeMinutes: parseInt(e.target.value),
+                  })
+                }
               />
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <Button onClick={handleStart} className="w-full mb-6 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold py-3 rounded-lg shadow-md transition duration-200">
-        Spiel starten
-      </Button>
 
+      {/* Kategorien */}
       <Card className="mb-4">
         <CardContent>
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-xl font-semibold">Kategorien</h2>
-            <Button variant="outline" size="sm" onClick={onManageCategories}>
-              Kategorien verwalten
-            </Button>
+          <div
+            className="flex justify-between items-center cursor-pointer"
+            onClick={() => setShowCategories(!showCategories)}
+          >
+            <h2 className="text-xl font-semibold">🗂️ Kategorien</h2>
+            <span>{showCategories ? "▲" : "▼"}</span>
           </div>
-          <ul className="space-y-1">
-            {categories.map((cat, i) => (
-              <li key={i} className="flex items-center justify-between">
-                <span>{cat.name}</span>
-                <input
-                  type="checkbox"
-                  checked={cat.active}
-                  onChange={(e) => {
-                    const updated = [...categories];
-                    updated[i].active = e.target.checked;
-                    localStorage.setItem("imposter_categories", JSON.stringify(updated));
-                    window.location.reload(); // optional: oder per Prop updaten
-                  }}
-                />
-              </li>
-            ))}
-          </ul>
+          <AnimatePresence initial={false}>
+            {showCategories && (
+              <motion.div
+                key="categories"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden mt-2"
+              >
+                <div className="flex justify-end mb-2">
+                  <Button variant="outline" size="sm" onClick={onManageCategories}>
+                    Kategorien verwalten
+                  </Button>
+                </div>
+                <ul className="space-y-1">
+                  {categories.map((cat, i) => (
+                    <li key={i} className="flex items-center justify-between">
+                      <span>{cat.name}</span>
+                      <input
+                        type="checkbox"
+                        checked={cat.active}
+                        onChange={(e) => {
+                          const updated = [...categories];
+                          updated[i].active = e.target.checked;
+                          localStorage.setItem(
+                            "imposter_categories",
+                            JSON.stringify(updated)
+                          );
+                          window.location.reload();
+                        }}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </CardContent>
       </Card>
 
+      {/* Highscore */}
       {highscore && Object.keys(highscore).length > 0 && (
         <Card>
           <CardContent>
-            <h2 className="text-xl font-semibold mb-2">🏆 Highscore</h2>
-            <ul className="space-y-1 mb-2">
-              {Object.entries(highscore).map(([name, score]) => (
-                <li key={name} className="flex justify-between bg-white rounded px-3 py-1 shadow text-sm">
-                  <span>{name}</span>
-                  <span>
-                    🟢 {score.wins} / 🔴 {score.losses}
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <Button onClick={onResetHighscore} className="bg-red-500 hover:bg-red-600">
-              Highscore zurücksetzen
-            </Button>
+            <div
+              className="flex justify-between items-center cursor-pointer"
+              onClick={() => setShowHighscore(!showHighscore)}
+            >
+              <h2 className="text-xl font-semibold">🏆 Highscore</h2>
+              <span>{showHighscore ? "▲" : "▼"}</span>
+            </div>
+            <AnimatePresence initial={false}>
+              {showHighscore && (
+                <motion.div
+                  key="highscore"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden mt-2"
+                >
+                  <PlayerStats players={players} highscore={highscore} />
+                  <Button onClick={onResetHighscore} className="bg-red-500 hover:bg-red-600">
+                    Highscore zurücksetzen
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </CardContent>
         </Card>
       )}
