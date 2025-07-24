@@ -94,17 +94,21 @@ export default function GameEndScreen({ evaluationDone, evaluateGame, resultText
                         <p className="text-md text-gray-800 bg-yellow-100 p-3 rounded">
                             {resultText || "Keine Auswertung verfügbar."}
                         </p>
+                        <br/>
+                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold py-2 rounded-lg shadow" onClick={onRestart}>
+                            Zurück zum Start
+                        </Button>
+                        <br/>
                         <div className="mt-4">
                             <h3 className="text-md font-semibold mb-2">🏅 Highscore</h3>
                             <PlayerStats players={players} highscore={highscore} />
                         </div>
+                       
                     </CardContent>
                 </Card>
             )}
 
-            <Button className="w-full" onClick={onRestart}>
-                Zurück zum Start
-            </Button>
+
         </div>
     );
 }

@@ -6,6 +6,7 @@ export default function RevealWordScreen({ players, imposters, word, hint, showH
   const [index, setIndex] = useState(0);
   const [showContent, setShowContent] = useState(false);
   const [hasSeenContent, setHasSeenContent] = useState(false);
+  const [confirmAbort, setConfirmAbort] = useState(false);
 
   const timerRef = useRef(null);
 
@@ -17,7 +18,7 @@ export default function RevealWordScreen({ players, imposters, word, hint, showH
     if (!hasSeenContent) {
       timerRef.current = setTimeout(() => {
         setHasSeenContent(true);
-      }, 1000); // Hinweis muss 1 Sekunde sichtbar sein
+      }, 1000);
     }
   };
 
@@ -33,6 +34,7 @@ export default function RevealWordScreen({ players, imposters, word, hint, showH
       setIndex(index + 1);
       setShowContent(false);
       setHasSeenContent(false);
+      setConfirmAbort(false);
     } else {
       onNext();
     }
@@ -86,9 +88,26 @@ export default function RevealWordScreen({ players, imposters, word, hint, showH
             >
               {index < players.length - 1 ? "Nächster Spieler" : "Spiel starten"}
             </Button>
-            <Button className="h-12 bg-red-500 hover:bg-red-600" onClick={onAbort}>
-              Spiel abbrechen
-            </Button>
+
+            {confirmAbort ? (
+              <div className="flex flex-col gap-2">
+                <p className="text-sm text-gray-700 font-bold">Möchtest du das Spiel wirklich abbrechen?</p>
+                <div className="flex gap-2 justify-center">
+                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white text-lg font-semibold py-2 rounded-lg shadow" 
+                  onClick={onAbort}>
+                    Ja
+                  </Button>
+                  <Button className="w-full bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-2 rounded-lg shadow"
+                   onClick={() => setConfirmAbort(false)}>
+                    Nein
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <Button className="h-12 bg-red-500 hover:bg-red-600" onClick={() => setConfirmAbort(true)}>
+                Spiel abbrechen
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
