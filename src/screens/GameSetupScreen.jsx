@@ -31,6 +31,9 @@ export default function GameSetupScreen({
   const [showCategories, setShowCategories] = useState(false);
   const [showHighscore, setShowHighscore] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState("😀");
+  const [showAddPlayer, setShowAddPlayer] = useState(false);
+
 
   const emojiOptions = ["😀", "😎", "👽", "🐱", "🐶", "🦊", "🐸", "🧙‍♂️", "🧛‍♀️", "🧟", "🤖"];
 
@@ -44,11 +47,14 @@ export default function GameSetupScreen({
   }, [settings]);
 
   const addPlayer = () => {
-    if (newPlayer.trim() && !players.find((p) => p.name === newPlayer.trim())) {
-      setPlayers([...players, { name: newPlayer.trim(), icon: "😀" }]);
+    const trimmed = newPlayer.trim();
+    if (trimmed && !players.find((p) => p.name === trimmed)) {
+      setPlayers([...players, { name: trimmed, icon: selectedIcon }]);
       setNewPlayer("");
+      setSelectedIcon("😀"); // optional: zurücksetzen
     }
   };
+
 
   const removePlayer = (name) => {
     setPlayers(players.filter((p) => p.name !== name));
@@ -94,30 +100,83 @@ export default function GameSetupScreen({
 
   return (
     <div className="p-4 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Spiel vorbereiten</h1>
+      <div className="flex items-center gap-2 mb-4">
+        <img src="pwa-192x192.png" alt="Imposter Icon" className="w-8 h-8" />
+        <h1 className="text-2xl font-bold">Imposter</h1>
+      </div>
 
-      {/* Spieler hinzufügen */}
+
+
+      {/* Spieler */}
       <Card className="mb-4">
         <CardContent>
-          <h2 className="text-xl font-semibold mb-2">🧑‍🤝‍🧑 Spieler hinzufügen</h2>
-          <div className="flex gap-2 mb-2">
-            <Input
-              value={newPlayer}
-              onChange={(e) => setNewPlayer(e.target.value)}
-              placeholder="Spielername"
-            />
-            <Button onClick={addPlayer}>Hinzufügen</Button>
-          </div>
-          <div className="flex flex-wrap gap-2">
+          <h2 className="text-xl font-semibold mb-2">🧑‍🤝‍🧑 Spieler</h2>
+
+          {/* Bereits hinzugefügte Spieler */}
+          <div className="flex flex-wrap gap-2 mb-4">
             {players.map((p, i) => (
               <div key={i} className="flex items-center gap-2 bg-gray-100 p-2 rounded">
-                <span>{p.icon}</span>
+                <span className="text-xl">{p.icon}</span>
                 <span>{p.name}</span>
-                <Button variant="ghost" size="sm" onClick={() => removePlayer(p.name)}>
+                <Button
+                  size="icon"
+                  className="w-6 h-6 p-0 text-red-600 hover:text-red-800"
+                  variant="ghost"
+                  onClick={() => removePlayer(p.name)}
+                >
                   ✖️
                 </Button>
               </div>
             ))}
+          </div>
+
+          {/* Neuer Spieler hinzufügen mit + */}
+          <div>
+            <Button
+              onClick={() => setShowAddPlayer((prev) => !prev)}
+              className="mb-2"
+              variant="outline"
+            >
+              ➕ Neuer Spieler
+            </Button>
+
+            <AnimatePresence>
+              {showAddPlayer && (
+                <motion.div
+                  key="add-player-form"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <div className="flex gap-2 mb-2 mt-2">
+                    <Input
+                      value={newPlayer}
+                      onChange={(e) => setNewPlayer(e.target.value)}
+                      placeholder="Spielername"
+                    />
+                    <Button onClick={addPlayer}>Hinzufügen</Button>
+                  </div>
+
+                  <div className="mb-2">
+                    <p className="text-sm text-gray-600 mb-1">Icon auswählen:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {emojiOptions.map((emoji) => (
+                        <button
+                          key={emoji}
+                          className={`text-2xl p-2 rounded border ${selectedIcon === emoji ? "border-blue-500" : "border-transparent"}`}
+                          onClick={() => setSelectedIcon(emoji)}
+                          type="button"
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </CardContent>
       </Card>
