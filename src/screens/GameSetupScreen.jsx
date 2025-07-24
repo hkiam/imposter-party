@@ -25,8 +25,11 @@ export default function GameSetupScreen({
         numImposters: 1,
         showHints: true,
         roundTimeMinutes: 2,
+        allowRandomImposters: false,
+        randomImposterChance: 1,
       };
   });
+
 
   const [showCategories, setShowCategories] = useState(false);
   const [showHighscore, setShowHighscore] = useState(false);
@@ -75,9 +78,19 @@ export default function GameSetupScreen({
       return;
     }
 
+    // Imposter auswählen
     const shuffled = shuffleArray(players);
-    const imposters = shuffled.slice(0, settings.numImposters).map((p) => p.name);
+    let impostorCount = settings.numImposters;
+    if (settings.allowRandomImposters) {
+      const roll = Math.random() * 100;
+      if (roll < settings.randomImposterChance) {
+        // Wähle zufällige Anzahl Impostor zwischen 0 und players.length - 1
+        impostorCount = Math.floor(Math.random() * players.length);
+      }
+    }
+    const imposters = shuffled.slice(0, impostorCount).map((p) => p.name);
 
+    // Wort auswählen
     const activeWords = categories.filter((c) => c.active).flatMap((c) => c.words);
     if (activeWords.length === 0) {
       alert("Keine Wörter in aktiven Kategorien!");
@@ -245,6 +258,39 @@ export default function GameSetupScreen({
                     }
                   />
                 </div>
+
+                <div>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={settings.allowRandomImposters}
+                      onChange={(e) =>
+                        setSettings({ ...settings, allowRandomImposters: e.target.checked })
+                      }
+                      className="mr-2"
+                    />
+                    Zufällige Anzahl Impostor (0 bis n) erlauben
+                  </label>
+                </div>
+
+                {settings.allowRandomImposters && (
+                  <div>
+                    <label>Wahrscheinlichkeit (0–50%) für zufällige Impostor-Anzahl:</label>
+                    <Input
+                      type="number"
+                      min={0}
+                      max={50}
+                      value={settings.randomImposterChance}
+                      onChange={(e) =>
+                        setSettings({
+                          ...settings,
+                          randomImposterChance: Math.min(50, Math.max(0, parseInt(e.target.value) || 0)),
+                        })
+                      }
+                    />
+                  </div>
+                )}
+
               </motion.div>
             )}
           </AnimatePresence>
