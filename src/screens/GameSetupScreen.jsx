@@ -5,6 +5,7 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import PlayerStats from "../components/ui/PlayerStats";
+import { UpdatePrompt } from '../components/ui/UpdatePrompt'
 
 export default function GameSetupScreen({
   onStartGame,
@@ -119,12 +120,7 @@ export default function GameSetupScreen({
         <img src="pwa-192x192.png" alt="Imposter Icon" className="w-8 h-8" />
         <h1 className="text-2xl font-bold">Imposter</h1>
         <p>v{__APP_VERSION__}</p>
-
-        {needRefresh && (
-          <div className="fixed bottom-4 right-4 bg-yellow-100 p-4 rounded shadow">
-            <button onClick={() => updateServiceWorker(true)}>🔄 Neue Version verfügbar!</button>
-          </div>
-        )}
+        <UpdatePrompt />
       </div>
 
 
