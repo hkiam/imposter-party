@@ -75,9 +75,7 @@ base: "/imposter-party/", // Passe ggf. an deinen Repo-Namen an
 ### Build & Bereitstellung:
 
 ```bash
-npm run build
-rm -r docs 
-cp -r dist docs
+rm -r docs && npm run build && cp -r dist docs
 git commit -m "Deploy to GitHub Pages"
 git push
 ```
