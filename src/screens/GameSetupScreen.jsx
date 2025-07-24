@@ -83,15 +83,15 @@ export default function GameSetupScreen({
 
     // Imposter auswählen
     const shuffled = shuffleArray(players);
-    let impostorCount = settings.numImposters;
+    let imposterCount = settings.numImposters;
     if (settings.allowRandomImposters) {
       const roll = Math.random() * 100;
       if (roll < settings.randomImposterChance) {
-        // Wähle zufällige Anzahl Impostor zwischen 0 und players.length - 1
-        impostorCount = Math.floor(Math.random() * players.length);
+        // Wähle zufällige Anzahl Imposter zwischen 0 und players.length - 1
+        imposterCount = Math.floor(Math.random() * players.length);
       }
     }
-    const imposters = shuffled.slice(0, impostorCount).map((p) => p.name);
+    const imposters = shuffled.slice(0, imposterCount).map((p) => p.name);
 
     // Wort auswählen
     const activeWords = categories.filter((c) => c.active).flatMap((c) => c.words);
@@ -274,13 +274,13 @@ export default function GameSetupScreen({
                       }
                       className="mr-2"
                     />
-                    Zufällige Anzahl Impostor (0 bis n) erlauben
+                    Zufällige Anzahl Imposter (0 bis n) erlauben
                   </label>
                 </div>
 
                 {settings.allowRandomImposters && (
                   <div>
-                    <label>Wahrscheinlichkeit (0–50%) für zufällige Impostor-Anzahl:</label>
+                    <label>Wahrscheinlichkeit (0–50%) für zufällige Imposter-Anzahl:</label>
                     <Input
                       type="number"
                       min={0}

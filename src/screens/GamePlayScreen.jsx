@@ -91,14 +91,14 @@ export default function GamePlayScreen({ players, roundTimeMinutes, onEndGame })
           {paused ? "Fortsetzen" : "Pause"}
         </Button>
         <Button variant="destructive" onClick={handleEndClick}>
-          Impostor wählen
+          Imposter wählen
         </Button>
       </div>
 
       {showEndPrompt && timeExpired && (
         <div className="bg-yellow-100 border border-yellow-300 p-4 rounded shadow text-left animate-pulse">
           <h2 className="text-lg font-semibold mb-2">⏳ Zeit abgelaufen</h2>
-          <p className="mb-4">Die Runde ist beendet. Bitte legt jetzt fest, wer der Impostor ist.</p>
+          <p className="mb-4">Die Runde ist beendet. Bitte legt jetzt fest, wer der Imposter ist.</p>
           <Button className="w-full" onClick={onEndGame}>Weiter zur Auswertung</Button>
         </div>
       )}
@@ -106,7 +106,7 @@ export default function GamePlayScreen({ players, roundTimeMinutes, onEndGame })
       {confirmEndEarly && (
         <div className="bg-red-100 border border-red-300 p-4 rounded shadow text-left">
           <h2 className="text-lg font-semibold mb-2">⚠️ Spiel wirklich beenden?</h2>
-          <p className="mb-4">Willst du wirklich vorzeitig den Impostor wählen und das Spiel beenden?</p>
+          <p className="mb-4">Willst du wirklich vorzeitig den Imposter wählen und das Spiel beenden?</p>
           <div className="flex gap-4">
             <Button variant="destructive" onClick={confirmEndGame}>Ja, beenden</Button>
             <Button variant="secondary" onClick={() => setConfirmEndEarly(false)}>Abbrechen</Button>
