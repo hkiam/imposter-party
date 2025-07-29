@@ -19,7 +19,7 @@ export default function GameSetupScreen({
     numImposters: 1,
     showHints: true,
     roundTimeMinutes: 2,
-    votingTimeMinutes: 0,
+    votingTimeMinutes: 1,
     allowRandomImposters: false,
     randomImposterChance: 1,
   };
@@ -41,11 +41,6 @@ export default function GameSetupScreen({
 
     return { ...defaultSettings, ...parsed };
   });
-
-
-
-
-  const { needRefresh, updateServiceWorker } = useRegisterSW()
 
   const [showCategories, setShowCategories] = useState(false);
   const [showHighscore, setShowHighscore] = useState(false);
