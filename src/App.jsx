@@ -587,6 +587,7 @@ export default function App() {
                     imposters={gameState.imposters}
                     word={gameState.word}
                     roundTimeMinutes={settings.roundTimeMinutes}
+                    votingTimeMinutes={settings.votingTimeMinutes}
                     onEndGame={handleEndGame}
                 />
             )}

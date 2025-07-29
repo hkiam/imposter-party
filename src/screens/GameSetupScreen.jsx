@@ -27,6 +27,7 @@ export default function GameSetupScreen({
         numImposters: 1,
         showHints: true,
         roundTimeMinutes: 2,
+        votingTimeMinutes: 0,
         allowRandomImposters: false,
         randomImposterChance: 1,
       };
@@ -259,6 +260,20 @@ export default function GameSetupScreen({
                       setSettings({
                         ...settings,
                         roundTimeMinutes: parseInt(e.target.value),
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <label>Abstimmzeit (Minuten):</label>
+                  <Input
+                    type="number"
+                    min={0}
+                    value={settings.votingTimeMinutes}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        votingTimeMinutes: parseInt(e.target.value),
                       })
                     }
                   />
