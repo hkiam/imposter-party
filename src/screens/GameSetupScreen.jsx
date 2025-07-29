@@ -14,24 +14,36 @@ export default function GameSetupScreen({
   categories,
   onManageCategories
 }) {
+
+  const defaultSettings = {
+    numImposters: 1,
+    showHints: true,
+    roundTimeMinutes: 2,
+    votingTimeMinutes: 0,
+    allowRandomImposters: false,
+    randomImposterChance: 1,
+  };
+
   const [players, setPlayers] = useState(() => {
     const saved = localStorage.getItem("imposter_players");
     return saved ? JSON.parse(saved) : [];
   });
   const [newPlayer, setNewPlayer] = useState("");
+
   const [settings, setSettings] = useState(() => {
     const saved = localStorage.getItem("imposter_settings");
-    return saved
-      ? JSON.parse(saved)
-      : {
-        numImposters: 1,
-        showHints: true,
-        roundTimeMinutes: 2,
-        votingTimeMinutes: 0,
-        allowRandomImposters: false,
-        randomImposterChance: 1,
-      };
+    let parsed = {};
+    try {
+      parsed = saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      console.warn("Fehler beim Parsen von Settings:", e);
+    }
+
+    return { ...defaultSettings, ...parsed };
   });
+
+
+
 
   const { needRefresh, updateServiceWorker } = useRegisterSW()
 
