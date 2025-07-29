@@ -6,6 +6,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import PlayerStats from "../components/ui/PlayerStats";
 import { UpdatePrompt } from '../components/ui/UpdatePrompt'
+import defaultSettings from "../config/defaultSettings";
 
 export default function GameSetupScreen({
   onStartGame,
@@ -14,15 +15,6 @@ export default function GameSetupScreen({
   categories,
   onManageCategories
 }) {
-
-  const defaultSettings = {
-    numImposters: 1,
-    showHints: true,
-    roundTimeMinutes: 2,
-    votingTimeMinutes: 1,
-    allowRandomImposters: false,
-    randomImposterChance: 1,
-  };
 
   const [players, setPlayers] = useState(() => {
     const saved = localStorage.getItem("imposter_players");
