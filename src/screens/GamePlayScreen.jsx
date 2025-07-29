@@ -27,6 +27,7 @@ export default function GamePlayScreen({ players, roundTimeMinutes, votingTimeMi
         if (timeLeft === 0) {
             setShowEndPrompt(true);
             setTimeExpired(true);
+        }else if (timeLeft === 3) {
             if (endSoundRef.current) {
                 endSoundRef.current.play().catch(err =>
                     console.warn("Ton konnte nicht abgespielt werden:", err)
@@ -44,6 +45,8 @@ export default function GamePlayScreen({ players, roundTimeMinutes, votingTimeMi
     useEffect(() => {
         if (votingTimeLeft === 0) {
             setVotingTimeExpired(true);
+            
+        }else if (votingTimeLeft === 3) {
             if (endSoundRef.current) {
                 endSoundRef.current.play().catch(err =>
                     console.warn("Ton konnte nicht abgespielt werden:", err)
@@ -113,7 +116,7 @@ export default function GamePlayScreen({ players, roundTimeMinutes, votingTimeMi
             <div className="text-5xl font-mono mb-6">⏱ {formatTime(timeLeft)}</div>
 
             <div className="flex justify-center gap-4 mb-6">
-                <Button onClick={() => setPaused((p) => !p)}>
+                <Button onClick={() => setPaused((p) => !p)} disabled={timeLeft <= 3}>
                     {paused ? "Fortsetzen" : "Pause"}
                 </Button>
                 <Button variant="destructive" onClick={handleEndClick}>
