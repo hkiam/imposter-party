@@ -121,7 +121,7 @@ export default function GamePlayScreen({ players, roundTimeMinutes, votingTimeMi
                 </Button>
             </div>
 
-            <audio ref={endSoundRef} src="/sounds/timer-end.mp3" preload="auto" />
+            <audio ref={endSoundRef} src={`${import.meta.env.BASE_URL}sounds/timer-end.mp3`} preload="auto" />
 
             {showEndPrompt && timeExpired && (
                 <div className="bg-yellow-100 border border-yellow-300 p-4 rounded shadow text-left animate-pulse">
