@@ -1,23 +1,32 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardContent } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Card, CardContent } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { useGameStateStore, useGamePersistStore } from '../state/useGameStore';
 
-export default function CategoryManagerScreen({ categories, setCategories, onBack }) {
-  const [newCategory, setNewCategory] = useState("");
+export default function CategoryManagerScreen() {
+  const { categories, setCategories } = useGamePersistStore();
+  const { setPhase } = useGameStateStore();
+
+  const [newCategory, setNewCategory] = useState('');
   const [newWords, setNewWords] = useState({});
   const [openCategoryIndex, setOpenCategoryIndex] = useState(null);
 
   const addCategory = () => {
     if (!newCategory.trim()) return;
-    setCategories([...categories, { name: newCategory.trim(), words: [], active: true }]);
-    setNewCategory("");
+    setCategories([
+      ...categories,
+      { name: newCategory.trim(), words: [], active: true },
+    ]);
+    setNewCategory('');
   };
 
   const removeCategory = (name) => {
     setCategories(categories.filter((cat) => cat.name !== name));
-    if (categories.findIndex(cat => cat.name === name) === openCategoryIndex) {
+    if (
+      categories.findIndex((cat) => cat.name === name) === openCategoryIndex
+    ) {
       setOpenCategoryIndex(null);
     }
   };
@@ -40,7 +49,7 @@ export default function CategoryManagerScreen({ categories, setCategories, onBac
     const updated = [...categories];
     updated[index].words.push({ word, hint });
     setCategories(updated);
-    setNewWords({ ...newWords, [index]: { word: "", hint: "" } });
+    setNewWords({ ...newWords, [index]: { word: '', hint: '' } });
   };
 
   const removeWordFromCategory = (catIndex, wordIndex) => {
@@ -75,13 +84,13 @@ export default function CategoryManagerScreen({ categories, setCategories, onBac
             >
               <div className="flex items-center gap-2">
                 <span className="text-xl">
-                  {openCategoryIndex === i ? "▼" : "▶"}
+                  {openCategoryIndex === i ? '▼' : '▶'}
                 </span>
                 <h2 className="text-xl font-semibold">{cat.name}</h2>
               </div>
               <div className="flex gap-2 items-center">
                 <label>
-                  Aktiv:{" "}
+                  Aktiv:{' '}
                   <input
                     type="checkbox"
                     checked={cat.active}
@@ -109,7 +118,7 @@ export default function CategoryManagerScreen({ categories, setCategories, onBac
                 <motion.div
                   key="category-content"
                   initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
+                  animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden"
@@ -137,16 +146,22 @@ export default function CategoryManagerScreen({ categories, setCategories, onBac
                   <div className="flex flex-col sm:flex-row gap-2">
                     <Input
                       placeholder="Wort"
-                      value={newWords[i]?.word || ""}
+                      value={newWords[i]?.word || ''}
                       onChange={(e) =>
-                        setNewWords({ ...newWords, [i]: { ...newWords[i], word: e.target.value } })
+                        setNewWords({
+                          ...newWords,
+                          [i]: { ...newWords[i], word: e.target.value },
+                        })
                       }
                     />
                     <Input
                       placeholder="Hinweis"
-                      value={newWords[i]?.hint || ""}
+                      value={newWords[i]?.hint || ''}
                       onChange={(e) =>
-                        setNewWords({ ...newWords, [i]: { ...newWords[i], hint: e.target.value } })
+                        setNewWords({
+                          ...newWords,
+                          [i]: { ...newWords[i], hint: e.target.value },
+                        })
                       }
                     />
                     <Button onClick={() => addWordToCategory(i)}>➕</Button>
@@ -159,7 +174,7 @@ export default function CategoryManagerScreen({ categories, setCategories, onBac
       ))}
 
       <div className="fixed bottom-4 left-0 right-0 flex justify-center z-50">
-        <Button onClick={onBack}>Zurück</Button>
+        <Button onClick={() => setPhase('setup')}>Zurück</Button>
       </div>
     </div>
   );

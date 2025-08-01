@@ -1,72 +1,69 @@
-import React, { useState, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { useRegisterSW } from 'virtual:pwa-register/react'
-import { Card, CardContent } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import PlayerStats from "../components/ui/PlayerStats";
-import { UpdatePrompt } from '../components/ui/UpdatePrompt'
-import defaultSettings from "../config/defaultSettings";
+import React, { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useRegisterSW } from 'virtual:pwa-register/react';
+import { Card, CardContent } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import PlayerStats from '../components/ui/PlayerStats';
+import { UpdatePrompt } from '../components/ui/UpdatePrompt';
+import { useGameStateStore, useGamePersistStore } from '../state/useGameStore';
 
-export default function GameSetupScreen({
-  onStartGame,
-  highscore,
-  onResetHighscore,
-  categories,
-  onManageCategories
-}) {
+export default function GameSetupScreen() {
+  const { setPhase, startGame } = useGameStateStore();
+  const {
+    players,
+    settings,
+    highscore,
+    resetHighscore,
+    categories,
+    addPlayer,
+    removePlayerByName,
+    setSettings,
+  } = useGamePersistStore();
 
-  const [players, setPlayers] = useState(() => {
-    const saved = localStorage.getItem("imposter_players");
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [newPlayer, setNewPlayer] = useState("");
-
-  const [settings, setSettings] = useState(() => {
-    const saved = localStorage.getItem("imposter_settings");
-    let parsed = {};
-    try {
-      parsed = saved ? JSON.parse(saved) : {};
-    } catch (e) {
-      console.warn("Fehler beim Parsen von Settings:", e);
-    }
-
-    return { ...defaultSettings, ...parsed };
-  });
-
+  const [newPlayer, setNewPlayer] = useState('');
   const [showCategories, setShowCategories] = useState(false);
   const [showHighscore, setShowHighscore] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [selectedIcon, setSelectedIcon] = useState("😀");
+  const [selectedIcon, setSelectedIcon] = useState('😀');
   const [showAddPlayer, setShowAddPlayer] = useState(false);
 
-
   const emojiOptions = [
-    "😀", "😎", "👽", "🐱", "🐶", "🦊", "🐸", "🧙‍♂️", "🧛‍♀️", "🧟", "🤖",
-    "👻", "🤡", "🥸", "🤓", "🦄", "🐵", "🐙", "🧞‍♂️", "🧚‍♀️", "🦸‍♀️", "👾", "🎮", "🕵️‍♂️", "🍕", "🍩"
+    '😀',
+    '😎',
+    '👽',
+    '🐱',
+    '🐶',
+    '🦊',
+    '🐸',
+    '🧙‍♂️',
+    '🧛‍♀️',
+    '🧟',
+    '🤖',
+    '👻',
+    '🤡',
+    '🥸',
+    '🤓',
+    '🦄',
+    '🐵',
+    '🐙',
+    '🧞‍♂️',
+    '🧚‍♀️',
+    '🦸‍♀️',
+    '👾',
+    '🎮',
+    '🕵️‍♂️',
+    '🍕',
+    '🍩',
   ];
 
-
-  useEffect(() => {
-    localStorage.setItem("imposter_players", JSON.stringify(players));
-  }, [players]);
-
-  useEffect(() => {
-    localStorage.setItem("imposter_settings", JSON.stringify(settings));
-  }, [settings]);
-
-  const addPlayer = () => {
+  const onAddPlayer = () => {
     const trimmed = newPlayer.trim();
     if (trimmed && !players.find((p) => p.name === trimmed)) {
-      setPlayers([...players, { name: trimmed, icon: selectedIcon }]);
-      setNewPlayer("");
-      setSelectedIcon("😀"); // optional: zurücksetzen
+      addPlayer({ name: trimmed, icon: selectedIcon });
+      setNewPlayer('');
+      setSelectedIcon('😀'); // optional: zurücksetzen
     }
-  };
-
-
-  const removePlayer = (name) => {
-    setPlayers(players.filter((p) => p.name !== name));
   };
 
   function shuffleArray(array) {
@@ -80,7 +77,7 @@ export default function GameSetupScreen({
 
   const handleStart = () => {
     if (players.length < 3) {
-      alert("Mindestens 3 Spieler erforderlich");
+      alert('Mindestens 3 Spieler erforderlich');
       return;
     }
 
@@ -97,14 +94,17 @@ export default function GameSetupScreen({
     const imposters = shuffled.slice(0, imposterCount).map((p) => p.name);
 
     // Wort auswählen
-    const activeWords = categories.filter((c) => c.active).flatMap((c) => c.words);
+    const activeWords = categories
+      .filter((c) => c.active)
+      .flatMap((c) => c.words);
     if (activeWords.length === 0) {
-      alert("Keine Wörter in aktiven Kategorien!");
+      alert('Keine Wörter in aktiven Kategorien!');
       return;
     }
 
     const chosen = activeWords[Math.floor(Math.random() * activeWords.length)];
-    const startPlayer = shuffled[Math.floor(Math.random() * shuffled.length)].name;
+    const startPlayer =
+      shuffled[Math.floor(Math.random() * shuffled.length)].name;
 
     const gameState = {
       imposters,
@@ -113,8 +113,7 @@ export default function GameSetupScreen({
       startPlayer,
       round: 1,
     };
-
-    onStartGame(players, categories, settings, gameState);
+    startGame(gameState);
   };
 
   return (
@@ -126,8 +125,6 @@ export default function GameSetupScreen({
         <UpdatePrompt />
       </div>
 
-
-
       {/* Spieler */}
       <Card className="mb-4">
         <CardContent>
@@ -136,14 +133,17 @@ export default function GameSetupScreen({
           {/* Bereits hinzugefügte Spieler */}
           <div className="flex flex-wrap gap-2 mb-4">
             {players.map((p, i) => (
-              <div key={i} className="flex items-center gap-2 bg-gray-100 p-2 rounded">
+              <div
+                key={i}
+                className="flex items-center gap-2 bg-gray-100 p-2 rounded"
+              >
                 <span className="text-xl">{p.icon}</span>
                 <span>{p.name}</span>
                 <Button
                   size="icon"
                   className="w-6 h-6 p-0 text-red-600 hover:text-red-800"
                   variant="ghost"
-                  onClick={() => removePlayer(p.name)}
+                  onClick={() => removePlayerByName(p.name)}
                 >
                   ✖️
                 </Button>
@@ -166,7 +166,7 @@ export default function GameSetupScreen({
                 <motion.div
                   key="add-player-form"
                   initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
+                  animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden"
@@ -177,16 +177,18 @@ export default function GameSetupScreen({
                       onChange={(e) => setNewPlayer(e.target.value)}
                       placeholder="Spielername"
                     />
-                    <Button onClick={addPlayer}>Hinzufügen</Button>
+                    <Button onClick={onAddPlayer}>Hinzufügen</Button>
                   </div>
 
                   <div className="mb-2">
-                    <p className="text-sm text-gray-600 mb-1">Icon auswählen:</p>
+                    <p className="text-sm text-gray-600 mb-1">
+                      Icon auswählen:
+                    </p>
                     <div className="flex flex-wrap gap-2">
                       {emojiOptions.map((emoji) => (
                         <button
                           key={emoji}
-                          className={`text-2xl p-2 rounded border ${selectedIcon === emoji ? "border-blue-500" : "border-transparent"}`}
+                          className={`text-2xl p-2 rounded border ${selectedIcon === emoji ? 'border-blue-500' : 'border-transparent'}`}
                           onClick={() => setSelectedIcon(emoji)}
                           type="button"
                         >
@@ -218,14 +220,14 @@ export default function GameSetupScreen({
             onClick={() => setShowSettings(!showSettings)}
           >
             <h2 className="text-xl font-semibold">🛠️ Einstellungen</h2>
-            <span>{showSettings ? "▲" : "▼"}</span>
+            <span>{showSettings ? '▲' : '▼'}</span>
           </div>
           <AnimatePresence initial={false}>
             {showSettings && (
               <motion.div
                 key="settings"
                 initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
+                animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3 }}
                 className="overflow-hidden mt-2 space-y-2"
@@ -238,7 +240,10 @@ export default function GameSetupScreen({
                     max={players.length || 1}
                     value={settings.numImposters}
                     onChange={(e) =>
-                      setSettings({ ...settings, numImposters: parseInt(e.target.value) })
+                      setSettings({
+                        ...settings,
+                        numImposters: parseInt(e.target.value),
+                      })
                     }
                   />
                 </div>
@@ -287,7 +292,10 @@ export default function GameSetupScreen({
                       type="checkbox"
                       checked={settings.allowRandomImposters}
                       onChange={(e) =>
-                        setSettings({ ...settings, allowRandomImposters: e.target.checked })
+                        setSettings({
+                          ...settings,
+                          allowRandomImposters: e.target.checked,
+                        })
                       }
                       className="mr-2"
                     />
@@ -297,7 +305,9 @@ export default function GameSetupScreen({
 
                 {settings.allowRandomImposters && (
                   <div>
-                    <label>Wahrscheinlichkeit (0–50%) für zufällige Imposter-Anzahl:</label>
+                    <label>
+                      Wahrscheinlichkeit (0–50%) für zufällige Imposter-Anzahl:
+                    </label>
                     <Input
                       type="number"
                       min={0}
@@ -306,20 +316,20 @@ export default function GameSetupScreen({
                       onChange={(e) =>
                         setSettings({
                           ...settings,
-                          randomImposterChance: Math.min(50, Math.max(0, parseInt(e.target.value) || 0)),
+                          randomImposterChance: Math.min(
+                            50,
+                            Math.max(0, parseInt(e.target.value) || 0)
+                          ),
                         })
                       }
                     />
                   </div>
                 )}
-
               </motion.div>
             )}
           </AnimatePresence>
         </CardContent>
       </Card>
-
-
 
       {/* Kategorien */}
       <Card className="mb-4">
@@ -329,20 +339,24 @@ export default function GameSetupScreen({
             onClick={() => setShowCategories(!showCategories)}
           >
             <h2 className="text-xl font-semibold">🗂️ Kategorien</h2>
-            <span>{showCategories ? "▲" : "▼"}</span>
+            <span>{showCategories ? '▲' : '▼'}</span>
           </div>
           <AnimatePresence initial={false}>
             {showCategories && (
               <motion.div
                 key="categories"
                 initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
+                animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3 }}
                 className="overflow-hidden mt-2"
               >
                 <div className="flex justify-end mb-2">
-                  <Button variant="outline" size="sm" onClick={onManageCategories}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPhase('categories')}
+                  >
                     Kategorien verwalten
                   </Button>
                 </div>
@@ -357,7 +371,7 @@ export default function GameSetupScreen({
                           const updated = [...categories];
                           updated[i].active = e.target.checked;
                           localStorage.setItem(
-                            "imposter_categories",
+                            'imposter_categories',
                             JSON.stringify(updated)
                           );
                           window.location.reload();
@@ -381,20 +395,23 @@ export default function GameSetupScreen({
               onClick={() => setShowHighscore(!showHighscore)}
             >
               <h2 className="text-xl font-semibold">🏆 Highscore</h2>
-              <span>{showHighscore ? "▲" : "▼"}</span>
+              <span>{showHighscore ? '▲' : '▼'}</span>
             </div>
             <AnimatePresence initial={false}>
               {showHighscore && (
                 <motion.div
                   key="highscore"
                   initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
+                  animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden mt-2"
                 >
                   <PlayerStats players={players} highscore={highscore} />
-                  <Button onClick={onResetHighscore} className="bg-red-500 hover:bg-red-600">
+                  <Button
+                    onClick={resetHighscore}
+                    className="bg-red-500 hover:bg-red-600"
+                  >
                     Highscore zurücksetzen
                   </Button>
                 </motion.div>

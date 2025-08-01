@@ -1,4 +1,4 @@
-import { useRegisterSW } from 'virtual:pwa-register/react'
+import { useRegisterSW } from 'virtual:pwa-register/react';
 
 export function UpdatePrompt() {
   const {
@@ -7,11 +7,11 @@ export function UpdatePrompt() {
     updateServiceWorker,
   } = useRegisterSW({
     onRegistered(r) {
-      console.log('SW registered:', r)
+      console.log('SW registered:', r);
     },
     onRegisterError(error) {
-      console.error('SW registration error:', error)
-    }
+      console.error('SW registration error:', error);
+    },
   });
 
   return needRefresh ? (
