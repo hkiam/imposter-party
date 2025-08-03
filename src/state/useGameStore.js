@@ -5,21 +5,18 @@ import { defaultCategories, defaultSettings } from '../config/defaultSettings';
 export const createCategoriesSlice = (set) => ({
   categories: defaultCategories,
   setCategories: (categories) => set({ categories }),
-  resetCategories: () => {
-    setCategories(defaultCategories);
-  },
+  resetCategories: () => set({ categories: defaultCategories }),
 });
 export const createSettingsSlice = (set) => ({
   settings: defaultSettings,
   setSettings: (settings) => set({ settings }),
+  resetSettings: () => set({ settings: defaultSettings }),
 });
 
 export const createHighscoreSlice = (set) => ({
   highscore: {},
   setHighscore: (score) => set({ highscore: score }),
-  resetHighscore: () => {
-    setHighscore({});
-  },
+  resetHighscore: () => set({ highscore: {} }),
 });
 
 export const createPlayerssSlice = (set, get) => ({
