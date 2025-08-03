@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -6,7 +6,7 @@ import PlayerStats from '../components/ui/PlayerStats';
 import { useGameStateStore, useGamePersistStore } from '../state/useGameStore';
 
 export default function GameEndScreen() {
-  const { gameState, resetGame } = useGameStateStore();
+  const { gameState } = useGameStateStore();
   const { players, highscore, setHighscore } = useGamePersistStore();
 
   const [step, setStep] = useState(0);
@@ -17,15 +17,22 @@ export default function GameEndScreen() {
 
   const navigate = useNavigate();
 
+  // Automatische Bewertung: wurden alle Imposter erkannt?
+  useEffect(() => {
+    const imposters = new Set(gameState.imposters || []);
+    const selected = new Set(gameState.selectedPlayers || []);
+    const allFound = [...imposters].every((name) => selected.has(name));
+    setAllImpostersFound(allFound);
+
+    if (!allFound) {
+      evaluateGame(false, false); // sofort werten
+    } else {
+      setStep(1); // weiter zur Wort-Abfrage
+    }
+  }, [gameState]);
+
   const handleAnswer = (value) => {
-    if (step === 0) {
-      setAllImpostersFound(value);
-      if (!value) {
-        evaluateGame(false, false); // Imposter nicht erkannt → direkt auswerten
-      } else {
-        setStep(1);
-      }
-    } else if (step === 1) {
+    if (step === 1) {
       setWordGuessedByImposters(value);
       evaluateGame(value, allImpostersFound);
     }
@@ -69,48 +76,23 @@ export default function GameEndScreen() {
         'Die ehrlichen Spieler haben gewonnen, weil die Imposter das Wort nicht erraten konnten.'
       );
     }
+
     setEvaluationDone(true);
-  };
-  const handleReset = () => {
-    resetGame();
-    navigate('/');
   };
 
   return (
     <div className="p-4 max-w-xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Spielende</h1>
+      <div className="mt-4 bg-red-100 border border-red-300 text-red-800 p-2 rounded">
+        <strong>Imposter:</strong> {gameState?.imposters.join(', ')}
+        <br />
+        <strong>Wort:</strong> {gameState?.word}
+      </div>
+      <br />
 
       {!evaluationDone ? (
         <Card className="mb-4">
           <CardContent>
-            <div className="mt-4 bg-red-100 border border-red-300 text-red-800 p-2 rounded">
-              <strong>Imposter:</strong> {gameState.imposters.join(', ')}
-              <br />
-              <strong>Wort:</strong> {gameState.word}
-            </div>
-            <br />
-            {step === 0 && (
-              <>
-                <p className="mb-4 text-sm text-gray-700 font-bold text-center">
-                  Wurden alle Imposter erkannt?
-                </p>
-                <div className="flex gap-4">
-                  <Button
-                    onClick={() => handleAnswer(true)}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white text-lg font-semibold py-2 rounded-lg shadow"
-                  >
-                    ✅ Ja
-                  </Button>
-                  <Button
-                    onClick={() => handleAnswer(false)}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-2 rounded-lg shadow"
-                  >
-                    ❌ Nein
-                  </Button>
-                </div>
-              </>
-            )}
-
             {step === 1 && (
               <>
                 <p className="mb-4 text-sm text-gray-700 font-bold text-center">
@@ -144,7 +126,7 @@ export default function GameEndScreen() {
             <br />
             <Button
               className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold py-2 rounded-lg shadow"
-              onClick={handleReset}
+              onClick={() => navigate('/')}
             >
               Zurück zum Start
             </Button>

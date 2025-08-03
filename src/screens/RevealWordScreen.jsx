@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button';
 import { useGameStateStore, useGamePersistStore } from '../state/useGameStore';
 
 export default function RevealWordScreen() {
-  const { gameState, resetGame } = useGameStateStore();
+  const { gameState } = useGameStateStore();
   const { players, settings } = useGamePersistStore();
   const [index, setIndex] = useState(0);
   const [showContent, setShowContent] = useState(false);
@@ -44,11 +44,6 @@ export default function RevealWordScreen() {
     } else {
       navigate('/play');
     }
-  };
-
-  const handleReset = () => {
-    resetGame();
-    navigate('/');
   };
 
   return (
@@ -112,7 +107,7 @@ export default function RevealWordScreen() {
                 <div className="flex gap-2 justify-center">
                   <Button
                     className="w-full bg-green-600 hover:bg-green-700 text-white text-lg font-semibold py-2 rounded-lg shadow"
-                    onClick={handleReset}
+                    onClick={() => navigate('/')}
                   >
                     Ja
                   </Button>

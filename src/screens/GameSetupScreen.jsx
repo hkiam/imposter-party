@@ -8,6 +8,7 @@ import { Input } from '../components/ui/input';
 import PlayerStats from '../components/ui/PlayerStats';
 import { UpdatePrompt } from '../components/ui/UpdatePrompt';
 import { useGameStateStore, useGamePersistStore } from '../state/useGameStore';
+import InstructionModal from '../components/ui/InstructionModal';
 
 export default function GameSetupScreen() {
   const {
@@ -129,6 +130,16 @@ export default function GameSetupScreen() {
         <p>v{__APP_VERSION__}</p>
         <UpdatePrompt />
       </div>
+
+      <InstructionModal
+        visible={settings.showInstructions ?? true}
+        onClose={(e) =>
+          setSettings({
+            ...settings,
+            showInstructions: false,
+          })
+        }
+      />
 
       {/* Spieler */}
       <Card className="mb-4">

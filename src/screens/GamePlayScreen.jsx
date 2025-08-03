@@ -126,7 +126,7 @@ export default function GamePlayScreen() {
 
   const confirmEndGame = () => {
     setConfirmEndEarly(false);
-    navigate('/end');
+    navigate('/vote');
   };
 
   const roundTimerRef = useRef(null);
@@ -178,7 +178,7 @@ export default function GamePlayScreen() {
             </div>
           )}
 
-          <Button variant="destructive" onClick={() => navigate('/end')}>
+          <Button variant="destructive" onClick={() => navigate('/vote')}>
             Weiter zur Auswertung
           </Button>
         </div>

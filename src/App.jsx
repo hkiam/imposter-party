@@ -12,6 +12,7 @@ import RevealWordScreen from './screens/RevealWordScreen';
 import GamePlayScreen from './screens/GamePlayScreen';
 import GameEndScreen from './screens/GameEndScreen';
 import CategoryManagerScreen from './screens/CategoryManagerScreen';
+import VotingScreen from './screens/VotingScreen';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="/reveal" element={<RevealWordScreen />} />
           <Route path="/play" element={<GamePlayScreen />} />
           <Route path="/end" element={<GameEndScreen />} />
+          <Route path="/vote" element={<VotingScreen />} />
         </Routes>
       </div>
     </Router>
