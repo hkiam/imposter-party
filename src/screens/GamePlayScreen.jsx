@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
-import { useGameStateStore, useGamePersistStore } from '../state/useGameStore';
+import CountdownBar from '../components/ui/CountdownBar';
+import { useGamePersistStore } from '../state/useGameStore';
 
 export default function GamePlayScreen() {
   const { players, settings } = useGamePersistStore();
@@ -26,8 +27,13 @@ export default function GamePlayScreen() {
 
   useEffect(() => {
     if (paused || timeLeft <= 0) return;
-    const timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
-    return () => clearInterval(timer);
+
+    clearInterval(roundTimerRef.current); // alten Timer entfernen
+    roundTimerRef.current = setInterval(() => {
+      setTimeLeft((t) => t - 1);
+    }, 1000);
+
+    return () => clearInterval(roundTimerRef.current);
   }, [paused, timeLeft]);
 
   useEffect(() => {
@@ -35,36 +41,26 @@ export default function GamePlayScreen() {
       setShowEndPrompt(true);
       setTimeExpired(true);
     } else if (timeLeft === 3) {
-      if (endSoundRef.current) {
-        endSoundRef.current
-          .play()
-          .catch((err) =>
-            console.warn('Ton konnte nicht abgespielt werden:', err)
-          );
-      }
+      playEndSound();
     }
   }, [timeLeft]);
 
   useEffect(() => {
     if (timeLeft > 0 || votingTimeLeft <= 0) return;
-    const votingTimer = setInterval(
-      () => setVotingTimeLeft((t) => t - 1),
-      1000
-    );
-    return () => clearInterval(votingTimer);
+
+    clearInterval(votingTimerRef.current);
+    votingTimerRef.current = setInterval(() => {
+      setVotingTimeLeft((t) => t - 1);
+    }, 1000);
+
+    return () => clearInterval(votingTimerRef.current);
   }, [timeLeft, votingTimeLeft]);
 
   useEffect(() => {
     if (votingTimeLeft === 0) {
       setVotingTimeExpired(true);
     } else if (votingTimeLeft === 3) {
-      if (endSoundRef.current) {
-        endSoundRef.current
-          .play()
-          .catch((err) =>
-            console.warn('Ton konnte nicht abgespielt werden:', err)
-          );
-      }
+      playEndSound();
     }
   }, [votingTimeLeft]);
 
@@ -99,6 +95,21 @@ export default function GamePlayScreen() {
     };
   }, []);
 
+  const playEndSound = () => {
+    try {
+      const sound = endSoundRef.current;
+      if (sound && sound.canPlayType('audio/mpeg')) {
+        sound.play().catch((err) => {
+          console.warn('Audio-Fehler (Autoplay blockiert?)', err);
+        });
+      } else {
+        console.warn('Audioformat nicht unterstützt oder Sound fehlt.');
+      }
+    } catch (error) {
+      console.error('Fehler beim Audio-Abspielen:', error);
+    }
+  };
+
   const formatTime = (s) => {
     const m = Math.floor(s / 60);
     const sec = s % 60;
@@ -118,6 +129,8 @@ export default function GamePlayScreen() {
     navigate('/end');
   };
 
+  const roundTimerRef = useRef(null);
+  const votingTimerRef = useRef(null);
   const endSoundRef = useRef(null);
 
   return (
@@ -129,6 +142,7 @@ export default function GamePlayScreen() {
         </p>
       )}
       <div className="text-5xl font-mono mb-6">⏱ {formatTime(timeLeft)}</div>
+      <CountdownBar current={timeLeft} total={settings.roundTimeMinutes * 60} />
 
       <div className="flex justify-center gap-4 mb-6">
         <Button onClick={() => setPaused((p) => !p)} disabled={timeLeft <= 3}>
@@ -153,12 +167,18 @@ export default function GamePlayScreen() {
           </p>
 
           {settings.votingTimeMinutes > 0 && (
-            <div className="text-5xl font-mono mb-6">
-              ⏱ {formatTime(votingTimeLeft)}
+            <div>
+              <div className="text-5xl font-mono mb-6">
+                ⏱ {formatTime(votingTimeLeft)}
+              </div>
+              <CountdownBar
+                current={votingTimeLeft}
+                total={settings.votingTimeMinutes * 60}
+              />
             </div>
           )}
 
-          <Button variant="destructive" onClick={onEndGame}>
+          <Button variant="destructive" onClick={() => navigate('/end')}>
             Weiter zur Auswertung
           </Button>
         </div>
