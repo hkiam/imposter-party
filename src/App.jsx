@@ -1,21 +1,31 @@
-import React, { useEffect } from 'react';
+// src/App.jsx
+import React from 'react';
+import {
+  HashRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
+
 import GameSetupScreen from './screens/GameSetupScreen';
 import RevealWordScreen from './screens/RevealWordScreen';
 import GamePlayScreen from './screens/GamePlayScreen';
 import GameEndScreen from './screens/GameEndScreen';
 import CategoryManagerScreen from './screens/CategoryManagerScreen';
-import { useGameStateStore } from './state/useGameStore';
 
 export default function App() {
-  const { phase, gameState } = useGameStateStore();
-
   return (
-    <div className="min-h-screen bg-gray-100">
-      {phase === 'setup' && <GameSetupScreen />}
-      {phase === 'categories' && <CategoryManagerScreen />}
-      {phase === 'reveal' && gameState && <RevealWordScreen />}
-      {phase === 'play' && gameState && <GamePlayScreen />}
-      {phase === 'end' && gameState && <GameEndScreen />}
-    </div>
+    <Router>
+      <div className="min-h-screen bg-gray-100">
+        <Routes>
+          <Route path="/" element={<Navigate to="/setup" replace />} />
+          <Route path="/setup" element={<GameSetupScreen />} />
+          <Route path="/categories" element={<CategoryManagerScreen />} />
+          <Route path="/reveal" element={<RevealWordScreen />} />
+          <Route path="/play" element={<GamePlayScreen />} />
+          <Route path="/end" element={<GameEndScreen />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }

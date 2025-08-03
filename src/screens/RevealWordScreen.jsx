@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { useGameStateStore, useGamePersistStore } from '../state/useGameStore';
 
 export default function RevealWordScreen() {
-  const { setPhase, gameState, resetGame } = useGameStateStore();
+  const { gameState, resetGame } = useGameStateStore();
   const { players, settings } = useGamePersistStore();
   const [index, setIndex] = useState(0);
   const [showContent, setShowContent] = useState(false);
@@ -13,8 +14,10 @@ export default function RevealWordScreen() {
 
   const timerRef = useRef(null);
 
+  const navigate = useNavigate();
+
   const current = players[index];
-  const isImposter = gameState.imposters.includes(current.name);
+  const isImposter = gameState?.imposters?.includes(current.name);
 
   const handleShowContent = () => {
     setShowContent(true);
@@ -39,8 +42,13 @@ export default function RevealWordScreen() {
       setHasSeenContent(false);
       setConfirmAbort(false);
     } else {
-      setPhase('play');
+      navigate('/play');
     }
+  };
+
+  const handleReset = () => {
+    resetGame();
+    navigate('/');
   };
 
   return (
@@ -74,9 +82,9 @@ export default function RevealWordScreen() {
               {showContent
                 ? isImposter
                   ? settings.showHints
-                    ? `Hinweis (Imposter!): ${gameState.hint}`
+                    ? `Hinweis (Imposter!): ${gameState?.hint}`
                     : 'Du bist der Imposter!'
-                  : `Wort: ${gameState.word}`
+                  : `Wort: ${gameState?.word}`
                 : 'Halte das Bild gedrückt, um deinen Hinweis zu sehen'}
             </p>
           </div>
@@ -104,7 +112,7 @@ export default function RevealWordScreen() {
                 <div className="flex gap-2 justify-center">
                   <Button
                     className="w-full bg-green-600 hover:bg-green-700 text-white text-lg font-semibold py-2 rounded-lg shadow"
-                    onClick={resetGame}
+                    onClick={handleReset}
                   >
                     Ja
                   </Button>

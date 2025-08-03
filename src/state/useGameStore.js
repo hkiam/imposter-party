@@ -37,22 +37,17 @@ export const createPlayerssSlice = (set, get) => ({
 });
 
 export const useGameStateStore = create((set) => ({
-  phase: 'setup',
   gameState: null,
-
-  setPhase: (phase) => set({ phase }),
   setGameState: (gameState) => set({ gameState }),
 
   resetGame: () =>
     set({
       gameState: null,
-      phase: 'setup',
     }),
 
   startGame: (newGameState) =>
     set({
       gameState: newGameState,
-      phase: 'reveal',
     }),
 }));
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import PlayerStats from '../components/ui/PlayerStats';
@@ -13,6 +14,8 @@ export default function GameEndScreen() {
   const [wordGuessedByImposters, setWordGuessedByImposters] = useState(null);
   const [evaluationDone, setEvaluationDone] = useState(false);
   const [resultText, setResultText] = useState('');
+
+  const navigate = useNavigate();
 
   const handleAnswer = (value) => {
     if (step === 0) {
@@ -67,6 +70,10 @@ export default function GameEndScreen() {
       );
     }
     setEvaluationDone(true);
+  };
+  const handleReset = () => {
+    resetGame();
+    navigate('/');
   };
 
   return (
@@ -137,7 +144,7 @@ export default function GameEndScreen() {
             <br />
             <Button
               className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold py-2 rounded-lg shadow"
-              onClick={resetGame}
+              onClick={handleReset}
             >
               Zurück zum Start
             </Button>

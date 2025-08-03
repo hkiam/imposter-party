@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { useGameStateStore, useGamePersistStore } from '../state/useGameStore';
 
 export default function GamePlayScreen() {
   const { players, settings } = useGamePersistStore();
-  const { setPhase } = useGameStateStore();
   const [timeLeft, setTimeLeft] = useState(settings.roundTimeMinutes * 60);
   const [votingTimeLeft, setVotingTimeLeft] = useState(
     settings.votingTimeMinutes * 60
@@ -15,6 +15,8 @@ export default function GamePlayScreen() {
   const [votingTimeExpired, setVotingTimeExpired] = useState(false);
   const [confirmEndEarly, setConfirmEndEarly] = useState(false);
   const [startingPlayer, setStartingPlayer] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Wähle beim Start einen zufälligen Spieler als Startspieler
@@ -113,7 +115,7 @@ export default function GamePlayScreen() {
 
   const confirmEndGame = () => {
     setConfirmEndEarly(false);
-    setPhase('end');
+    navigate('/end');
   };
 
   const endSoundRef = useRef(null);

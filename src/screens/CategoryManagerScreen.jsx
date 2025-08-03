@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -7,11 +8,12 @@ import { useGameStateStore, useGamePersistStore } from '../state/useGameStore';
 
 export default function CategoryManagerScreen() {
   const { categories, setCategories } = useGamePersistStore();
-  const { setPhase } = useGameStateStore();
 
   const [newCategory, setNewCategory] = useState('');
   const [newWords, setNewWords] = useState({});
   const [openCategoryIndex, setOpenCategoryIndex] = useState(null);
+
+  const navigate = useNavigate();
 
   const addCategory = () => {
     if (!newCategory.trim()) return;
@@ -174,7 +176,7 @@ export default function CategoryManagerScreen() {
       ))}
 
       <div className="fixed bottom-4 left-0 right-0 flex justify-center z-50">
-        <Button onClick={() => setPhase('setup')}>Zurück</Button>
+        <Button onClick={() => navigate('/setup')}>Zurück</Button>
       </div>
     </div>
   );

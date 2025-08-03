@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -9,7 +10,6 @@ import { UpdatePrompt } from '../components/ui/UpdatePrompt';
 import { useGameStateStore, useGamePersistStore } from '../state/useGameStore';
 
 export default function GameSetupScreen() {
-  const { setPhase, startGame } = useGameStateStore();
   const {
     players,
     settings,
@@ -20,6 +20,10 @@ export default function GameSetupScreen() {
     removePlayerByName,
     setSettings,
   } = useGamePersistStore();
+
+  const { setGameState } = useGameStateStore();
+
+  const navigate = useNavigate();
 
   const [newPlayer, setNewPlayer] = useState('');
   const [showCategories, setShowCategories] = useState(false);
@@ -113,7 +117,8 @@ export default function GameSetupScreen() {
       startPlayer,
       round: 1,
     };
-    startGame(gameState);
+    setGameState(gameState);
+    navigate('/reveal');
   };
 
   return (
@@ -355,7 +360,7 @@ export default function GameSetupScreen() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setPhase('categories')}
+                    onClick={() => navigate('/categories')}
                   >
                     Kategorien verwalten
                   </Button>
