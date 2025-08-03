@@ -1,8 +1,12 @@
-import React, { useState, useRef } from "react";
-import { Card, CardContent } from "../components/ui/card";
-import { Button } from "../components/ui/button";
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { useGameStateStore, useGamePersistStore } from '../state/useGameStore';
 
-export default function RevealWordScreen({ players, imposters, word, hint, showHints, onNext, onAbort }) {
+export default function RevealWordScreen() {
+  const { gameState } = useGameStateStore();
+  const { players, settings } = useGamePersistStore();
   const [index, setIndex] = useState(0);
   const [showContent, setShowContent] = useState(false);
   const [hasSeenContent, setHasSeenContent] = useState(false);
@@ -10,8 +14,10 @@ export default function RevealWordScreen({ players, imposters, word, hint, showH
 
   const timerRef = useRef(null);
 
+  const navigate = useNavigate();
+
   const current = players[index];
-  const isImposter = imposters.includes(current.name);
+  const isImposter = gameState?.imposters?.includes(current.name);
 
   const handleShowContent = () => {
     setShowContent(true);
@@ -36,7 +42,7 @@ export default function RevealWordScreen({ players, imposters, word, hint, showH
       setHasSeenContent(false);
       setConfirmAbort(false);
     } else {
-      onNext();
+      navigate('/play');
     }
   };
 
@@ -64,47 +70,60 @@ export default function RevealWordScreen({ players, imposters, word, hint, showH
             </button>
 
             <p
-              className={`mt-2 text-xl font-semibold ${showContent && isImposter ? "text-red-600" : ""
-                }`}
+              className={`mt-2 text-xl font-semibold ${
+                showContent && isImposter ? 'text-red-600' : ''
+              }`}
             >
               {showContent
                 ? isImposter
-                  ? showHints
-                    ? `Hinweis (Imposter!): ${hint}`
-                    : "Du bist der Imposter!"
-                  : `Wort: ${word}`
-                : "Halte das Bild gedrückt, um deinen Hinweis zu sehen"}
+                  ? settings.showHints
+                    ? `Hinweis (Imposter!): ${gameState?.hint}`
+                    : 'Du bist der Imposter!'
+                  : `Wort: ${gameState?.word}`
+                : 'Halte das Bild gedrückt, um deinen Hinweis zu sehen'}
             </p>
           </div>
 
           <div className="flex flex-col gap-4 justify-center mt-6">
             <Button
-              className={`h-12 ${hasSeenContent
-                  ? "bg-blue-500 hover:bg-blue-600"
-                  : "bg-gray-400 cursor-not-allowed opacity-60"
-                }`}
+              className={`h-12 ${
+                hasSeenContent
+                  ? 'bg-blue-500 hover:bg-blue-600'
+                  : 'bg-gray-400 cursor-not-allowed opacity-60'
+              }`}
               onClick={handleNext}
               disabled={!hasSeenContent}
             >
-              {index < players.length - 1 ? "Nächster Spieler" : "Spiel starten"}
+              {index < players.length - 1
+                ? 'Nächster Spieler'
+                : 'Spiel starten'}
             </Button>
 
             {confirmAbort ? (
               <div className="flex flex-col gap-2">
-                <p className="text-sm text-gray-700 font-bold">Möchtest du das Spiel wirklich abbrechen?</p>
+                <p className="text-sm text-gray-700 font-bold">
+                  Möchtest du das Spiel wirklich abbrechen?
+                </p>
                 <div className="flex gap-2 justify-center">
-                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white text-lg font-semibold py-2 rounded-lg shadow" 
-                  onClick={onAbort}>
+                  <Button
+                    className="w-full bg-green-600 hover:bg-green-700 text-white text-lg font-semibold py-2 rounded-lg shadow"
+                    onClick={() => navigate('/')}
+                  >
                     Ja
                   </Button>
-                  <Button className="w-full bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-2 rounded-lg shadow"
-                   onClick={() => setConfirmAbort(false)}>
+                  <Button
+                    className="w-full bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-2 rounded-lg shadow"
+                    onClick={() => setConfirmAbort(false)}
+                  >
                     Nein
                   </Button>
                 </div>
               </div>
             ) : (
-              <Button className="h-12 bg-red-500 hover:bg-red-600" onClick={() => setConfirmAbort(true)}>
+              <Button
+                className="h-12 bg-red-500 hover:bg-red-600"
+                onClick={() => setConfirmAbort(true)}
+              >
                 Spiel abbrechen
               </Button>
             )}
