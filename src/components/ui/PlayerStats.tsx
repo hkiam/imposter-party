@@ -1,6 +1,15 @@
-import React from 'react';
+import * as React from 'react';
+import { Player } from '../../config/defaultSettings';
 
-export default function PlayerStats({ players, highscore }) {
+interface PlayerStatsProps {
+  players: Player[];
+  highscore: { [playerName: string]: { wins: number; losses: number } };
+}
+
+export default function PlayerStats({
+  players,
+  highscore,
+}: PlayerStatsProps): React.ReactElement {
   const sortedPlayers = [...players].sort((a, b) => {
     const aScore =
       (highscore[a.name]?.wins ?? 0) * 2 - (highscore[a.name]?.losses ?? 0);

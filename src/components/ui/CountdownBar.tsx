@@ -1,6 +1,14 @@
-import React from 'react';
+import * as React from 'react';
 
-export default function CountdownBar({ current, total }) {
+interface CountdownBarProps {
+  current: number;
+  total: number;
+}
+
+export default function CountdownBar({
+  current,
+  total,
+}: CountdownBarProps): React.ReactElement {
   const percentage = Math.max((current / total) * 100, 0);
   const danger = percentage < 20;
 

@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import { Button } from './button';
+import { Player } from '../../config/defaultSettings';
 
-export default function VotingPanel({ players, onFinishVoting }) {
-  const [selectedPlayers, setSelectedPlayers] = useState([]);
+interface VotingPanelProps {
+  players: Player[];
+  onFinishVoting: (selectedPlayers: string[]) => void;
+}
 
-  const toggleSelection = (playerName) => {
+export default function VotingPanel({
+  players,
+  onFinishVoting,
+}: VotingPanelProps): React.ReactElement {
+  const [selectedPlayers, setSelectedPlayers] = useState<string[]>([]);
+
+  const toggleSelection = (playerName: string): void => {
     setSelectedPlayers((prev) =>
       prev.includes(playerName)
         ? prev.filter((p) => p !== playerName)
@@ -20,7 +30,7 @@ export default function VotingPanel({ players, onFinishVoting }) {
     <div className="mt-6 p-4 border rounded bg-white shadow">
       <h2 className="text-xl font-semibold mb-4">Wer ist der Imposter?</h2>
       <ul className="space-y-2 mb-4">
-        {players.map((player) => {
+        {players.map((player: Player) => {
           const isSelected = selectedPlayers.includes(player.name);
           return (
             <li key={player.name}>

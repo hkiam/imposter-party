@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { useRegisterSW } from 'virtual:pwa-register/react';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -10,7 +10,7 @@ import { UpdatePrompt } from '../components/ui/UpdatePrompt';
 import { useGameStateStore, useGamePersistStore } from '../state/useGameStore';
 import InstructionModal from '../components/ui/InstructionModal';
 
-export default function GameSetupScreen() {
+export default function GameSetupScreen(): React.ReactElement {
   const {
     players,
     settings,
@@ -65,13 +65,19 @@ export default function GameSetupScreen() {
   const onAddPlayer = () => {
     const trimmed = newPlayer.trim();
     if (trimmed && !players.find((p) => p.name === trimmed)) {
-      addPlayer({ name: trimmed, icon: selectedIcon });
+      addPlayer({
+        name: trimmed,
+        icon: selectedIcon,
+        wins: 0,
+        losses: 0,
+        gamesPlayed: 0,
+      });
       setNewPlayer('');
       setSelectedIcon('😀'); // optional: zurücksetzen
     }
   };
 
-  function shuffleArray(array) {
+  function shuffleArray<T>(array: T[]): T[] {
     const arr = [...array];
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -112,6 +118,8 @@ export default function GameSetupScreen() {
       shuffled[Math.floor(Math.random() * shuffled.length)].name;
 
     const gameState = {
+      players,
+      categories,
       imposters,
       word: chosen.word,
       hint: chosen.hint,
@@ -127,13 +135,13 @@ export default function GameSetupScreen() {
       <div className="flex items-center gap-2 mb-4">
         <img src="pwa-192x192.png" alt="Imposter Icon" className="w-8 h-8" />
         <h1 className="text-2xl font-bold">Imposter</h1>
-        <p>v{__APP_VERSION__}</p>
+        <p>v{(globalThis as any).__APP_VERSION__ || '1.0.0'}</p>
         <UpdatePrompt />
       </div>
 
       <InstructionModal
         visible={settings.showInstructions ?? true}
-        onClose={(e) =>
+        onClose={() =>
           setSettings({
             ...settings,
             showInstructions: false,

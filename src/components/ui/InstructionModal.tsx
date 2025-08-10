@@ -1,8 +1,15 @@
-// src/components/InstructionModal.jsx
-import React from 'react';
+import * as React from 'react';
 import { Button } from './button';
 
-export default function InstructionModal({ visible, onClose }) {
+interface InstructionModalProps {
+  visible: boolean;
+  onClose: () => void;
+}
+
+export default function InstructionModal({
+  visible,
+  onClose,
+}: InstructionModalProps): React.ReactElement | null {
   if (!visible) return null;
 
   return (

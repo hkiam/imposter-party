@@ -1,15 +1,15 @@
+import * as React from 'react';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 
-export function UpdatePrompt() {
+export function UpdatePrompt(): React.ReactElement | null {
   const {
-    offlineReady: [offlineReady, setOfflineReady],
-    needRefresh: [needRefresh, setNeedRefresh],
+    needRefresh: [needRefresh],
     updateServiceWorker,
   } = useRegisterSW({
-    onRegistered(r) {
+    onRegistered(r: ServiceWorkerRegistration | undefined): void {
       console.log('SW registered:', r);
     },
-    onRegisterError(error) {
+    onRegisterError(error: any): void {
       console.error('SW registration error:', error);
     },
   });
